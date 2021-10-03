@@ -1,4 +1,8 @@
 
+USEFUL INFO:
+- Week 8 Lecture 16 (this content I believe is a big part of project)
+
+
 TO DO LIST:
 [x] find a project partner.
 [ ] Determine what activities are to be performed by the program. 
