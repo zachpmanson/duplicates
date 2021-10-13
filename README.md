@@ -4,9 +4,16 @@ Due date: **11:59pm Friday 22nd October (end of week 12)**
 
 Grade Weighting: **25%**
 
+Authors: Dempsey Thompson, Zach Manson
+
 `duplicates` is (will be) a command line utility to locate and report duplicate files in (and below) a named directory based on SHA2 hashes.
 
-Created by Dempsey Thompson and Zach Manson.
+## Usage
+
+Compile using command `make` in root directory.
+
+Run `duplicates` TBD.
+
 
 ## Useful Information:
 
@@ -15,12 +22,16 @@ Created by Dempsey Thompson and Zach Manson.
 Project info:
  + [project explanation](https://teaching.csse.uwa.edu.au/units/CITS2002/projects/project2.php)
  + [project clarifications](https://teaching.csse.uwa.edu.au/units/CITS2002/projects/project2-clarifications.php)
+ + [sample solution output](https://secure.csse.uwa.edu.au/run/duplicates)
  + [submission location](https://secure.csse.uwa.edu.au/run/cssubmit)  (only 1 member needs to submit)
 
 # Todo
  + [ ] plan out program structure
- + [ ] figure out how makefiles work
-     + [ ] setup make on our computers
+ + [x] figure out how makefiles work
+     + [ ] setup make on dempsey's pc computers
+ + [x] scan directory
+ + [ ] some kind of hashmap?
+ + [ ] do flags
 
 ## Suggested Plan
  + [x] find a project partner.
