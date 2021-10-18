@@ -2,7 +2,7 @@
 
 PROJECT =  duplicates
 HEADERS =  $(PROJECT).h
-OBJ     =  duplicates.o files.o strSHA2.o list.o
+OBJ     =  duplicates.o files.o strSHA2.o listnode.o hashmap.o 
 
 
 C11     =  cc -std=c11

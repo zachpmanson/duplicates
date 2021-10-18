@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "duplicates.h"
+#include "listnode.h"
 
 #if	defined(__linux__)
 extern	char	*strdup(char *string);
