@@ -2,7 +2,7 @@
 
 PROJECT =  duplicates
 HEADERS =  $(PROJECT).h
-OBJ     =  duplicates.o files.o strSHA2.o 
+OBJ     =  duplicates.o files.o strSHA2.o list.o
 
 
 C11     =  cc -std=c11
@@ -17,3 +17,4 @@ $(PROJECT) : $(OBJ)
 
 clean:
 	rm -f $(PROJECT) $(OBJ)
+	
