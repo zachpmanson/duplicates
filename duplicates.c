@@ -52,9 +52,11 @@ int main(int argc, char *argv[]) {
     }
 
     scan_directory(argv[optind]);
-    // temp debug
+    HASHTABLE *hashtable = hashtable_new();
+
     for (int i = 0; i < nfiles; ++i) {
-        printf("%s\t %s\n", files[i].pathname,files[i].hash);
+        printf("Adding file %s to hashtable\n", files[i].pathname);
+        hashtable_add(hashtable, &files[i]);
     }
 
     exit(EXIT_SUCCESS);

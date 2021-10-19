@@ -9,8 +9,6 @@
 extern char *strdup(const char *s);
 #endif
 
-#define	CHECK_ALLOC(p) if(p == NULL) { perror(__func__); exit(EXIT_FAILURE); } 
-
 // Checks that a given pathname doesn't end with /. or /..
 int is_valid_dir(char *s) {
     char *slash = strrchr(s, '/');
