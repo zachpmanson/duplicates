@@ -4,6 +4,7 @@
 
 typedef struct {
     char *pathname;
+    int size;
     char *hash;
 } FILES;
 
