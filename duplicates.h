@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-//#include "listnode.h"
-//#include "hashmap.h"
+#include "hashmap.h"
 
 typedef struct {
     char *pathname;
