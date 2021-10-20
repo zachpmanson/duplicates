@@ -84,7 +84,17 @@ void do_single_hash_comparison(char *hash_to_match) {
 }
 
 void do_list_all_files() {
-    
+  	for(int i = 0; i < n_unique_hashes; ++i) {
+        LISTNODE *l = get_listnode_from_sha2hash(full_hashtable, unique_hashes[i]);          
+		if(l->nfiles > 1) {
+            for(int j = 0; j < l->nfiles; ++j) {
+				//prints the files in listnodes with more than 1 file... duplicates
+				printf("%s  ", l->files[j].pathname);
+            }
+            printf("\n");
+	    }
+    }
+    exit(EXIT_SUCCESS);
 }
 
 void do_quiet_output() {
