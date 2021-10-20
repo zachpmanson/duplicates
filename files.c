@@ -3,11 +3,7 @@
 #include  <sys/stat.h>
 #include  <sys/param.h>
 #include  <dirent.h>
-#include  <string.h>
 
-#if defined(__linux__)
-extern char *strdup(const char *s);
-#endif
 
 // Checks that a given pathname doesn't end with /. or /..
 int is_valid_dir(char *s) {
@@ -45,8 +41,10 @@ void scan_directory(char *dirname) {
         sprintf(pathname, "%s/%s", dirname, dp->d_name);
 
         if ( stat(pathname, &stat_info) != 0 ) {
-            perror(pathname);
-            exit(EXIT_FAILURE);
+            // Silently ignore files we can't open.  no error messages
+            continue;
+            //perror(pathname);
+            //exit(EXIT_FAILURE);
         }
 
         // Check if we exclude hidden files

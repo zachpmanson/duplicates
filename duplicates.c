@@ -4,8 +4,10 @@
 
 #include "duplicates.h"
 #include <getopt.h>
+#include <limits.h>
+char *realpath(const char *__restrict__file_name, char *__restrict__resolved_name);
 
-#define OPTLIST "aAfhlmq"
+#define OPTLIST "aAf:h:lmq"
 
 // To explain proper usage of program
 void usage() {
@@ -19,6 +21,80 @@ void is_advanced() {
     exit(EXIT_FAILURE);
 }
 
+void do_standard_output() {
+    printf("%i\n", nfiles);
+    printf("%i\n", total_file_size);
+    printf("%i\n",n_unique_hashes);
+    printf("%i\n", total_unique_size);
+}
+
+void do_single_file_comparison(char *filename_to_match) {
+    //printf("printing all dupes of %s\n", filename_to_match);
+    char *hash_to_match = strSHA2(filename_to_match);
+    //printf("hashed file: %s\n", hash_to_match);
+
+    if (hash_to_match == NULL) {
+        exit(EXIT_FAILURE);
+    }
+    LISTNODE *l = get_listnode_from_sha2hash(full_hashtable, hash_to_match);
+    // if no listnode for that hash exists, exit failure
+    if (l == NULL) {
+        exit(EXIT_FAILURE);
+    }
+    // if listnode exists are there is more than 1
+    if (l->nfiles > 1) {
+        // list all duplicates
+        for (int i = 0; i < l->nfiles; ++i) {
+            // other than original file
+            char *fullpath1 = realpath(l->files[i].pathname, NULL);
+            char *fullpath2 = realpath(filename_to_match, NULL);
+
+            if (strcmp(fullpath1, fullpath2) != 0) {
+                printf("%s\n",l->files[i].pathname);
+            }
+        }
+        exit(EXIT_SUCCESS);
+    } else {
+        // otherwise no duplicates exist
+        exit(EXIT_FAILURE);
+    }
+}
+
+void do_single_hash_comparison(char *hash_to_match) {
+
+    if (hash_to_match == NULL) {
+        exit(EXIT_FAILURE);
+    }
+    LISTNODE *l = get_listnode_from_sha2hash(full_hashtable, hash_to_match);
+    // if no listnode for that hash exists, exit failure
+    if (l == NULL) {
+        exit(EXIT_FAILURE);
+    }
+    // if listnode exists are there is more than 1
+    if (l->nfiles > 1) {
+        // list all duplicates
+        for (int i = 0; i < l->nfiles; ++i) {
+            printf("%s\n",l->files[i].pathname);
+        }
+        exit(EXIT_SUCCESS);
+    } else {
+        // otherwise no duplicates exist
+        exit(EXIT_FAILURE);
+    }
+}
+
+void do_list_all_files() {
+    
+}
+
+void do_quiet_output() {
+    if (nfiles > total_unique_size) {
+        exit(EXIT_SUCCESS);
+    } else {
+        exit(EXIT_FAILURE);
+    }
+}
+
 int main(int argc, char *argv[]) {
     
     // Requires at least 1 arg
@@ -27,6 +103,14 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
     
+    bool standard_output = true;
+    bool quiet_output = false;
+    bool single_file_comparison = false;
+    bool single_hash_comparison = false;
+    bool list_all_files = false;
+    char *filename_to_match = NULL;
+    char *hash_to_match;
+
     // Processes CLI args
     // Will fill these in as we go
     int opt;
@@ -39,32 +123,50 @@ int main(int argc, char *argv[]) {
                 is_advanced();
                 break;
             case 'f':
+                //printf("optarg: %s\n", optarg);
+                filename_to_match = strdup(optarg);
+                single_file_comparison = true;
+                standard_output = false;
                 break;
             case 'h':
+                hash_to_match = optarg;
+                single_hash_comparison = true;
+                standard_output = false;
                 break;
             case 'l':
+                standard_output = false;
+                list_all_files = true;
                 break;
             //case 'm': // unsure if supposed to process this as an arg
             //    break;// for basic version of project
             case 'q':
+                standard_output = false;
+                quiet_output = true;
                 break;
         }
     }
 
     scan_directory(argv[optind]);
-    HASHTABLE *hashtable = hashtable_new();
+    full_hashtable = hashtable_new();
 
     for (int i = 0; i < nfiles; ++i) {
-        //printf("Adding file %s to hashtable\n", files[i].pathname);
-        //printf("hash: %s\n", files[i].hash);
-        hashtable_add(hashtable, &files[i]);
+        hashtable_add(full_hashtable, &files[i]);
     }
-    printf("%i\n", nfiles);
-    printf("%i TOTAL BYTES\n", total_file_size);
-    printf("%i\n",n_unique_hashes);
-    printf("%i UNIQUE BYTES\n", total_unique_size);
-    for(int i = 0; i < n_unique_hashes; ++i){
-       // printf("%s\n", unique_hashes[i]);
+
+    if (standard_output == true) {
+        do_standard_output();
+    } else if (single_file_comparison == true) {
+        do_single_file_comparison(filename_to_match);
+    } else if (single_hash_comparison == true) {
+        do_single_hash_comparison(hash_to_match);
+    } else if (list_all_files == true) {
+        do_list_all_files();
+    } else if (quiet_output == true) {
+        do_quiet_output();
+    } else {
+        perror("Arg error!");
+        exit(EXIT_FAILURE);
     }
+
     exit(EXIT_SUCCESS);
 }

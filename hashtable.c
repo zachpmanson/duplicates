@@ -18,7 +18,7 @@ uint32_t hash_string(char *string)
 
 // Allocate space for a new hashtable
 HASHTABLE *hashtable_new(void) {
-    HASHTABLE   *new = calloc(HASHTABLE_SIZE, sizeof(LISTNODE *));
+    HASHTABLE *new = calloc(HASHTABLE_SIZE, sizeof(LISTNODE *));
     CHECK_ALLOC(new);
     return new;
 }
@@ -29,6 +29,9 @@ void hashtable_add(HASHTABLE *hashtable, FILES *file) {
     hashtable[h] = list_add(hashtable[h], file);
 }
 
-
+LISTNODE *get_listnode_from_sha2hash(HASHTABLE *hashtable, char *sha2hash) {
+    uint32_t h = hash_string(sha2hash) % HASHTABLE_SIZE;
+    return find_listnode_from_hash(hashtable[h], sha2hash);
+}
 
 

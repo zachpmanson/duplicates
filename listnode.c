@@ -1,10 +1,6 @@
 #include <string.h>
 #include "duplicates.h"
 
-#if	defined(__linux__)
-extern	char	*strdup(char *string);
-#endif
-
 // Create a new empty list
 LISTNODE *list_new(void) {
     return NULL;
@@ -80,7 +76,7 @@ LISTNODE *list_add(LISTNODE *listnode, FILES *file) {
     }
 }
 
-LISTNODE *hash_find(LISTNODE *listnode, char *sha2hash){
+LISTNODE *find_listnode_from_hash(LISTNODE *listnode, char *sha2hash) {
     while (listnode != NULL) {
         // traverse listnodes till end, return the listnode if it has the sha2hash we are looking for
         if (strcmp(listnode->sha2hash, sha2hash) == 0) {
