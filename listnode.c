@@ -29,6 +29,12 @@ LISTNODE *create_empty_listnode(FILES *file) {
     new->sha2hash = strdup(file->hash);
     CHECK_ALLOC(new->sha2hash); //this may cause errors
     new->next = NULL;
+    unique_hashes = realloc(unique_hashes, (n_unique_hashes + 1) * sizeof(unique_hashes[0]));
+    CHECK_ALLOC(unique_hashes);
+    unique_hashes[n_unique_hashes] = strdup(file->hash); //add to shar2hash array
+    CHECK_ALLOC(unique_hashes[n_unique_hashes]);
+    ++n_unique_hashes;//increment hash counter
+    total_unique_size += file->size;
     return new;
 }
 
@@ -66,4 +72,15 @@ LISTNODE *list_add(LISTNODE *listnode, FILES *file) {
         new->next = listnode;
         return new;
     }
+}
+
+LISTNODE *hash_find(LISTNODE *listnode, char *sha2hash){
+    while (listnode != NULL) {
+        // traverse listnodes till end, return the listnode if it has the sha2hash we are looking for
+        if (strcmp(listnode->sha2hash, sha2hash)) {
+            return listnode;
+        }
+        listnode = listnode->next;
+    }
+    return NULL;
 }

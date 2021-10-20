@@ -17,3 +17,4 @@ $(PROJECT) : $(OBJ)
 
 clean:
 	rm -f $(PROJECT) $(OBJ)
+	

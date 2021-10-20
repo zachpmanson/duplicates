@@ -75,7 +75,8 @@ void scan_directory(char *dirname) {
             files[nfiles].hash = strdup(c);
             CHECK_ALLOC(files[nfiles].hash);
             
-            ++nfiles;   
+            ++nfiles; 
+            total_file_size += stat_info.st_size;
         }
     }
 

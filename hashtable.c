@@ -29,3 +29,6 @@ void hashtable_add(HASHTABLE *hashtable, FILES *file) {
     hashtable[h] = list_add(hashtable[h], file);
 }
 
+
+
+

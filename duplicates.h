@@ -12,6 +12,7 @@ typedef struct {
 
 FILES *files;
 int nfiles;
+int total_file_size;
 
 // strSHA2.c functions
 char *strSHA2(char *filename);
@@ -27,6 +28,10 @@ typedef struct _list {
      int nfiles;
      struct _list   *next;
 } LISTNODE;
+
+char **unique_hashes;
+int n_unique_hashes;
+int total_unique_size;
 
 // listnode.c functions
 LISTNODE *list_new(void);
