@@ -56,10 +56,13 @@ int main(int argc, char *argv[]) {
 
     for (int i = 0; i < nfiles; ++i) {
         //printf("Adding file %s to hashtable\n", files[i].pathname);
+        //printf("hash: %s\n", files[i].hash);
         hashtable_add(hashtable, &files[i]);
     }
-    printf("%i BYTES\n", total_unique_size);
-    printf("%i BYTES\n", total_file_size);
+    printf("%i\n", nfiles);
+    printf("%i TOTAL BYTES\n", total_file_size);
+    printf("%i\n",n_unique_hashes);
+    printf("%i UNIQUE BYTES\n", total_unique_size);
     for(int i = 0; i < n_unique_hashes; ++i){
        // printf("%s\n", unique_hashes[i]);
     }

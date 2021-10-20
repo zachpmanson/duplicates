@@ -14,7 +14,9 @@ LISTNODE *list_new(void) {
 LISTNODE *list_find(LISTNODE *listnode, FILES *file) {
     while (listnode != NULL) {
         // traverse listnodes till end, return the listnode if it has the sha2hash we are looking for
-        if (strcmp(listnode->sha2hash, file->hash)) {
+        //printf("COMPARING listnode->sha2hash:%s to file->hash:%s\n",listnode->sha2hash,file->hash);
+        if (strcmp(listnode->sha2hash, file->hash) == 0) {
+            //printf("THEY MATCHED!");
             return listnode;
         }
         listnode = listnode->next;
@@ -24,6 +26,7 @@ LISTNODE *list_find(LISTNODE *listnode, FILES *file) {
 
 // Allocate space for a new item
 LISTNODE *create_empty_listnode(FILES *file) {
+    //printf("Creating new listnode for hash %s\n",file->hash);
     LISTNODE *new = calloc(1, sizeof(LISTNODE));
     CHECK_ALLOC(new);
     new->sha2hash = strdup(file->hash);
@@ -35,6 +38,7 @@ LISTNODE *create_empty_listnode(FILES *file) {
     CHECK_ALLOC(unique_hashes[n_unique_hashes]);
     ++n_unique_hashes;//increment hash counter
     total_unique_size += file->size;
+    //printf("total_unique_size:%i\n",total_unique_size);
     return new;
 }
 
@@ -62,11 +66,13 @@ LISTNODE *list_add(LISTNODE *listnode, FILES *file) {
     
     LISTNODE *foundlistnode;
     if ((foundlistnode = list_find(listnode, file)) != NULL) {
+        //printf("\tFound listnode for sha2hash: %s\n", file->hash);
         // if we find there is a listnode for this sha2hash, add file to it
         add_file_to_listnode(foundlistnode, file);
         return listnode;
     } else {
         // if no listnode exists for this sha2hash, create one and add file to it.
+        //printf("Couldn't find listnode for sha2hash: %s\n", file->hash);
         LISTNODE *new = create_empty_listnode(file);
         add_file_to_listnode(new, file);
         new->next = listnode;
@@ -77,7 +83,7 @@ LISTNODE *list_add(LISTNODE *listnode, FILES *file) {
 LISTNODE *hash_find(LISTNODE *listnode, char *sha2hash){
     while (listnode != NULL) {
         // traverse listnodes till end, return the listnode if it has the sha2hash we are looking for
-        if (strcmp(listnode->sha2hash, sha2hash)) {
+        if (strcmp(listnode->sha2hash, sha2hash) == 0) {
             return listnode;
         }
         listnode = listnode->next;

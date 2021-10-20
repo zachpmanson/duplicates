@@ -77,6 +77,7 @@ void scan_directory(char *dirname) {
             
             ++nfiles; 
             total_file_size += stat_info.st_size;
+            //printf("total_file_size: %i\n", total_file_size);
         }
     }
 
