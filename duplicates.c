@@ -182,7 +182,7 @@ int main(int argc, char *argv[]) {
     } else if (quiet_output == true) {
         do_quiet_output();
     } else {
-        perror("Arg error!");
+        usage();
         exit(EXIT_FAILURE);
     }
 
