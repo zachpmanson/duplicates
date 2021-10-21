@@ -68,7 +68,7 @@ void scan_directory(char *dirname) {
             CHECK_ALLOC(files[nfiles].pathname);
             
             files[nfiles].size = stat_info.st_size;
-
+            
             char *c = strSHA2(pathname);
             files[nfiles].hash = strdup(c);
             CHECK_ALLOC(files[nfiles].hash);

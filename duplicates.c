@@ -11,7 +11,7 @@ char *realpath(const char *__restrict__file_name, char *__restrict__resolved_nam
 
 // To explain proper usage of program
 void usage() {
-    fprintf(stderr, "Usage: requires 1 directory arg\n");
+    fprintf(stderr, "Usage: ./duplicates directory_path [-a] [-A] [-f filename] [-h SHA2_hash] [-l] [-q]\n");
     // add more usage instructions
 }
 
@@ -26,6 +26,7 @@ void do_standard_output() {
     printf("%i\n", total_file_size);
     printf("%i\n",n_unique_hashes);
     printf("%i\n", total_unique_size);
+    exit(EXIT_SUCCESS);
 }
 
 void do_single_file_comparison(char *filename_to_match) {
@@ -154,6 +155,13 @@ int main(int argc, char *argv[]) {
                 quiet_output = true;
                 break;
         }
+    }
+
+
+    if (optind > argc-1) {
+        //printf("%i\n", optind);
+        usage();
+        exit(EXIT_FAILURE);
     }
 
     scan_directory(argv[optind]);
