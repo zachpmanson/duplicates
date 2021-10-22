@@ -9,6 +9,7 @@
 extern	char	*strdup(char *string);
 #endif
 
+// struct for files
 typedef struct {
     char *pathname;
     int size;
@@ -24,7 +25,7 @@ char *strSHA2(char *filename);
 // files.c functions
 void scan_directory(char *dirname);
 
-// flags
+// Needed for the -a flag
 bool including_hidden;
 
 // struct for listnode

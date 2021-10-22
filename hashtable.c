@@ -29,6 +29,7 @@ void hashtable_add(HASHTABLE *hashtable, FILES *file) {
     hashtable[h] = list_add(hashtable[h], file);
 }
 
+// Retrieves the listnode corresponding to a sha2hash
 LISTNODE *get_listnode_from_sha2hash(HASHTABLE *hashtable, char *sha2hash) {
     uint32_t h = hash_string(sha2hash) % HASHTABLE_SIZE;
     return find_listnode_from_hash(hashtable[h], sha2hash);

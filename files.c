@@ -1,3 +1,5 @@
+//file.c implements the scanning of files and sub-directories, and stores 
+//them appropriately within a LISTNODE
 #include "duplicates.h"
 #include  <sys/types.h>
 #include  <sys/stat.h>
@@ -40,44 +42,41 @@ void scan_directory(char *dirname) {
         char pathname[MAXPATHLEN];
         sprintf(pathname, "%s/%s", dirname, dp->d_name);
 
+        
         if ( stat(pathname, &stat_info) != 0 ) {
             // Silently ignore files we can't open.  no error messages
             continue;
-            //perror(pathname);
-            //exit(EXIT_FAILURE);
         }
 
         // Check if we exclude hidden files
         if (including_hidden == false) {
-            // check if file is hidden
+            // Check if file is hidden
             if (is_hidden_file(pathname) == 1) {
-                // move onto next file
+                // Move onto next file
                 continue;
             }
         }
 
         if (S_ISDIR(stat_info.st_mode) != 0 && is_valid_dir(pathname)) {
-            // if dp is dir, recurse 
+            // If dp is dir, recurse 
             scan_directory(strdup(pathname));
         } else if (S_ISREG(stat_info.st_mode) != 0) {
             // Resize files array
             files = realloc(files, (nfiles + 1) * sizeof(files[0]));
             CHECK_ALLOC(files);
-
+            // Store the pathname of the file
             files[nfiles].pathname = strdup(pathname);
             CHECK_ALLOC(files[nfiles].pathname);
-            
+            // Store the size of the file
             files[nfiles].size = stat_info.st_size;
-            
+            // Store the hash of the file
             char *c = strSHA2(pathname);
             files[nfiles].hash = strdup(c);
             CHECK_ALLOC(files[nfiles].hash);
-            
+            // Increment our counters
             ++nfiles; 
             total_file_size += stat_info.st_size;
-            //printf("total_file_size: %i\n", total_file_size);
         }
     }
-
     closedir(dirp);
 }

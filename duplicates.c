@@ -21,6 +21,7 @@ void is_advanced() {
     exit(EXIT_FAILURE);
 }
 
+// No flag output
 void do_standard_output() {
     printf("%i\n", nfiles);
     printf("%i\n", total_file_size);
@@ -29,6 +30,7 @@ void do_standard_output() {
     exit(EXIT_SUCCESS);
 }
 
+// -f flag output
 void do_single_file_comparison(char *filename_to_match) {
     //printf("printing all dupes of %s\n", filename_to_match);
     char *hash_to_match = strSHA2(filename_to_match);
@@ -38,15 +40,15 @@ void do_single_file_comparison(char *filename_to_match) {
         exit(EXIT_FAILURE);
     }
     LISTNODE *l = get_listnode_from_sha2hash(full_hashtable, hash_to_match);
-    // if no listnode for that hash exists, exit failure
+    // If no listnode for that hash exists, exit failure
     if (l == NULL) {
         exit(EXIT_FAILURE);
     }
-    // if listnode exists are there is more than 1
+    // If listnode exists are there is more than 1
     if (l->nfiles > 1) {
-        // list all duplicates
+        // List all duplicates
         for (int i = 0; i < l->nfiles; ++i) {
-            // other than original file
+            // Other than original file
             char *fullpath1 = realpath(l->files[i].pathname, NULL);
             char *fullpath2 = realpath(filename_to_match, NULL);
 
@@ -56,40 +58,45 @@ void do_single_file_comparison(char *filename_to_match) {
         }
         exit(EXIT_SUCCESS);
     } else {
-        // otherwise no duplicates exist
+        // Otherwise no duplicates exist
         exit(EXIT_FAILURE);
     }
 }
 
+// -h flag output
 void do_single_hash_comparison(char *hash_to_match) {
 
     if (hash_to_match == NULL) {
         exit(EXIT_FAILURE);
     }
     LISTNODE *l = get_listnode_from_sha2hash(full_hashtable, hash_to_match);
-    // if no listnode for that hash exists, exit failure
+    // If no listnode for that hash exists, exit failure
     if (l == NULL) {
         exit(EXIT_FAILURE);
     }
-    // if listnode exists are there is more than 1
+    // If listnode exists are there is more than 1
     if (l->nfiles > 1) {
-        // list all duplicates
+        // List all duplicates
         for (int i = 0; i < l->nfiles; ++i) {
             printf("%s\n",l->files[i].pathname);
         }
         exit(EXIT_SUCCESS);
     } else {
-        // otherwise no duplicates exist
+        // Otherwise no duplicates exist
         exit(EXIT_FAILURE);
     }
 }
 
+// -l flag output
 void do_list_all_files() {
-  	for(int i = 0; i < n_unique_hashes; ++i) {
+    // Loops through listnodes
+    for(int i = 0; i < n_unique_hashes; ++i) {
         LISTNODE *l = get_listnode_from_sha2hash(full_hashtable, unique_hashes[i]);          
-		if(l->nfiles > 1) {
+		// Checks if the amount of files at a listnode is > 1, hence a duplicate
+        if(l->nfiles > 1) {
+            // Loops through each file at a listnode
             for(int j = 0; j < l->nfiles; ++j) {
-				//prints the files in listnodes with more than 1 file... duplicates
+				// Prints the files in the listnode
 				printf("%s  ", l->files[j].pathname);
             }
             printf("\n");
@@ -98,6 +105,7 @@ void do_list_all_files() {
     exit(EXIT_SUCCESS);
 }
 
+// -q flag output
 void do_quiet_output() {
     if (nfiles > total_unique_size) {
         exit(EXIT_SUCCESS);
@@ -134,7 +142,6 @@ int main(int argc, char *argv[]) {
                 is_advanced();
                 break;
             case 'f':
-                //printf("optarg: %s\n", optarg);
                 filename_to_match = strdup(optarg);
                 single_file_comparison = true;
                 standard_output = false;
@@ -148,8 +155,6 @@ int main(int argc, char *argv[]) {
                 standard_output = false;
                 list_all_files = true;
                 break;
-            //case 'm': // unsure if supposed to process this as an arg
-            //    break;// for basic version of project
             case 'q':
                 standard_output = false;
                 quiet_output = true;
@@ -159,18 +164,19 @@ int main(int argc, char *argv[]) {
 
 
     if (optind > argc-1) {
-        //printf("%i\n", optind);
         usage();
         exit(EXIT_FAILURE);
     }
 
-    scan_directory(argv[optind]);
-    full_hashtable = hashtable_new();
+    scan_directory(argv[optind]); // Looks through all the files in a given directory
+    full_hashtable = hashtable_new(); // Creates empty hashtable
 
+    // Populates the hashtable with files
     for (int i = 0; i < nfiles; ++i) {
         hashtable_add(full_hashtable, &files[i]);
     }
 
+    // Produces the output dependant upon the inputed flags
     if (standard_output == true) {
         do_standard_output();
     } else if (single_file_comparison == true) {
