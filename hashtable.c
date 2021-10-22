@@ -1,6 +1,7 @@
-#include <stdint.h>
+// hashtable.c defines functions that handle struct HASHTABLE
 
 #include "duplicates.h"
+#include <stdint.h>
 
 #define	HASHTABLE_SIZE 997
 
@@ -16,14 +17,14 @@ uint32_t hash_string(char *string)
     return hash;
 }
 
-// Allocate space for a new hashtable
+// Allocate space for a new empty hashtable
 HASHTABLE *hashtable_new(void) {
     HASHTABLE *new = calloc(HASHTABLE_SIZE, sizeof(LISTNODE *));
     CHECK_ALLOC(new);
     return new;
 }
 
-// Add a file to a hashtable
+// Add a file to a hashtable, store its listnode hashtable[]
 void hashtable_add(HASHTABLE *hashtable, FILES *file) {
     uint32_t h = hash_string(file->hash) % HASHTABLE_SIZE;
     hashtable[h] = list_add(hashtable[h], file);

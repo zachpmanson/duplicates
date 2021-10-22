@@ -9,7 +9,7 @@
 extern	char	*strdup(char *string);
 #endif
 
-// struct for files
+// struct for file metadata
 typedef struct {
     char *pathname;
     int size;
@@ -28,15 +28,15 @@ void scan_directory(char *dirname);
 // Needed for the -a flag
 bool including_hidden;
 
-// struct for listnode
+// struct for listnode used in hashtable
 typedef struct _list {
-     char           *sha2hash;
+     char *sha2hash;
      FILES *files;
      int nfiles;
      struct _list   *next;
 } LISTNODE;
 
-char **unique_hashes;
+char **unique_hashes; // dynamically allocated array of strings
 int n_unique_hashes;
 int total_unique_size;
 
@@ -56,4 +56,5 @@ HASHTABLE *hashtable_new(void);
 void hashtable_add(HASHTABLE *hashtable, FILES *file);
 LISTNODE *get_listnode_from_sha2hash(HASHTABLE *hashtable, char *sha2hash);
 
+// hashtable that will store all files
 HASHTABLE *full_hashtable;

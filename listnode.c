@@ -1,6 +1,6 @@
-//listnode.c implements all the functions that interact with the LISTNODE struct
-#include <string.h>
+// listnode.c implements all the functions that handle struct LISTNODE
 #include "duplicates.h"
+#include <string.h>
 
 // Create a new empty list
 LISTNODE *list_new(void) {
@@ -29,7 +29,7 @@ LISTNODE *create_empty_listnode(FILES *file) {
     new->next = NULL;
     unique_hashes = realloc(unique_hashes, (n_unique_hashes + 1) * sizeof(unique_hashes[0]));
     CHECK_ALLOC(unique_hashes);
-    unique_hashes[n_unique_hashes] = strdup(file->hash); // Add to shar2hash array
+    unique_hashes[n_unique_hashes] = strdup(file->hash); // Add to sha2hash array
     CHECK_ALLOC(unique_hashes[n_unique_hashes]);
     // Increment hash and unique size counters
     ++n_unique_hashes;
@@ -55,7 +55,7 @@ void add_file_to_listnode(LISTNODE *listnode, FILES *file) {
     ++listnode->nfiles;
 }
 
-// Adds a file to the listnode for its sha2hash, or creates a new listnode and then adds file to it
+// Adds a file to existing listnode for its sha2hash, or creates a new listnode and then adds file to it
 LISTNODE *list_add(LISTNODE *listnode, FILES *file) {
     
     LISTNODE *foundlistnode;

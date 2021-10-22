@@ -5,9 +5,10 @@
 #include "duplicates.h"
 #include <getopt.h>
 #include <limits.h>
-char *realpath(const char *__restrict__file_name, char *__restrict__resolved_name);
 
 #define OPTLIST "aAf:h:lmq"
+
+char *realpath(const char *__restrict__file_name, char *__restrict__resolved_name);
 
 // To explain proper usage of program
 void usage() {
@@ -15,8 +16,7 @@ void usage() {
     // add more usage instructions
 }
 
-// Function to handle -A flag, which finds if project is advanced
-// may change to EXIT_SUCCESS later if we decide to do advanced
+// Function to handle -A flag, which finds if project is advanced.  Returns 1
 void is_advanced() {
     exit(EXIT_FAILURE);
 }
@@ -32,10 +32,8 @@ void do_standard_output() {
 
 // -f flag output
 void do_single_file_comparison(char *filename_to_match) {
-    //printf("printing all dupes of %s\n", filename_to_match);
     char *hash_to_match = strSHA2(filename_to_match);
-    //printf("hashed file: %s\n", hash_to_match);
-
+    // If file doesn't exist, or strSHA2 failed
     if (hash_to_match == NULL) {
         exit(EXIT_FAILURE);
     }
@@ -92,15 +90,15 @@ void do_list_all_files() {
     // Loops through listnodes
     for(int i = 0; i < n_unique_hashes; ++i) {
         LISTNODE *l = get_listnode_from_sha2hash(full_hashtable, unique_hashes[i]);          
-		// Checks if the amount of files at a listnode is > 1, hence a duplicate
+        // Checks if the amount of files at a listnode is > 1, hence a duplicate
         if(l->nfiles > 1) {
             // Loops through each file at a listnode
             for(int j = 0; j < l->nfiles; ++j) {
-				// Prints the files in the listnode
-				printf("%s  ", l->files[j].pathname);
+                // Prints the files in the listnode
+                printf("%s  ", l->files[j].pathname);
             }
             printf("\n");
-	    }
+        }
     }
     exit(EXIT_SUCCESS);
 }
@@ -128,10 +126,9 @@ int main(int argc, char *argv[]) {
     bool single_hash_comparison = false;
     bool list_all_files = false;
     char *filename_to_match = NULL;
-    char *hash_to_match;
+    char *hash_to_match = NULL;
 
     // Processes CLI args
-    // Will fill these in as we go
     int opt;
     while ( (opt = getopt(argc, argv, OPTLIST)) != -1) {
         switch (opt) {
@@ -147,7 +144,7 @@ int main(int argc, char *argv[]) {
                 standard_output = false;
                 break;
             case 'h':
-                hash_to_match = optarg;
+                hash_to_match = strdup(optarg);
                 single_hash_comparison = true;
                 standard_output = false;
                 break;
@@ -162,7 +159,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-
+    // For cases where no directory is given
     if (optind > argc-1) {
         usage();
         exit(EXIT_FAILURE);
@@ -177,6 +174,8 @@ int main(int argc, char *argv[]) {
     }
 
     // Produces the output dependant upon the inputed flags
+    // This handles them in alphabetical order, imcompatible flag usage will
+    // preference by alphabetical order.
     if (standard_output == true) {
         do_standard_output();
     } else if (single_file_comparison == true) {
@@ -191,6 +190,6 @@ int main(int argc, char *argv[]) {
         usage();
         exit(EXIT_FAILURE);
     }
-
-    exit(EXIT_SUCCESS);
+    // Shouldn't reach here
+    exit(EXIT_FAILURE);
 }

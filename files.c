@@ -1,5 +1,5 @@
-//file.c implements the scanning of files and sub-directories, and stores 
-//them appropriately within a LISTNODE
+// file.c implements the scanning of files and sub-directories, and stores 
+// them appropriately within a FILES array
 #include "duplicates.h"
 #include  <sys/types.h>
 #include  <sys/stat.h>
@@ -26,7 +26,7 @@ int is_hidden_file(char *s) {
     return 0;
 }
 
-// Recursively find all files in dir and subdirs
+// Recursively find all files in dir and subdirs, add them to files[]
 void scan_directory(char *dirname) {
     DIR *dirp;
     struct dirent *dp;
@@ -44,7 +44,7 @@ void scan_directory(char *dirname) {
 
         
         if ( stat(pathname, &stat_info) != 0 ) {
-            // Silently ignore files we can't open.  no error messages
+            // Silently ignore files we can't open. No error messages.
             continue;
         }
 
