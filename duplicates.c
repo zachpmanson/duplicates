@@ -165,7 +165,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    scan_directory(argv[optind]); // Looks through all the files in a given directory
+    scan_directory(argv[optind]); // Looks through all the files in a given directory, stores them in files[]    
     full_hashtable = hashtable_new(); // Creates empty hashtable
 
     // Populates the hashtable with files
