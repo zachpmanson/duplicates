@@ -1,4 +1,4 @@
-# CITS2002 Project 2
+# duplicates
 
 Final grade: 92%
 
