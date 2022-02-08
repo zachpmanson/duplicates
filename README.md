@@ -1,5 +1,7 @@
 # duplicates
 
+CITS2002 Project 2
+
 Final grade: 92%
 
 Due date: **11:59pm Friday 22nd October (end of week 12)**
