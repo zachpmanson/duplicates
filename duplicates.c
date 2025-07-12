@@ -6,23 +6,23 @@
 #include <getopt.h>
 #include <limits.h>
 
-#define OPTLIST "aAf:h:lmq"
+#define OPTLIST "aAf:h:lmqQT"
 
 char *realpath(const char *__restrict__file_name, char *__restrict__resolved_name);
 
 // To explain proper usage of program
-void usage() {
+void usage(void) {
     fprintf(stderr, "Usage: ./duplicates directory_path [-a] [-A] [-f filename] [-h SHA2_hash] [-l] [-q]\n");
     // add more usage instructions
 }
 
 // Function to handle -A flag, which finds if project is advanced.  Returns 1
-void is_advanced() {
+void is_advanced(void) {
     exit(EXIT_FAILURE);
 }
 
 // No flag output
-void do_standard_output() {
+void do_standard_output(void) {
     printf("%i\n", nfiles);
     printf("%i\n", total_file_size);
     printf("%i\n",n_unique_hashes);
@@ -86,7 +86,11 @@ void do_single_hash_comparison(char *hash_to_match) {
 }
 
 // -l flag output
-void do_list_all_files() {
+void do_list_all_files(bool wrap_in_quotes, bool seperate_with_tabs) {
+    char* seperator = "  ";
+    if (seperate_with_tabs) {
+        seperator = "\t";
+    }
     // Loops through listnodes
     for(int i = 0; i < n_unique_hashes; ++i) {
         LISTNODE *l = get_listnode_from_sha2hash(full_hashtable, unique_hashes[i]);          
@@ -95,7 +99,11 @@ void do_list_all_files() {
             // Loops through each file at a listnode
             for(int j = 0; j < l->nfiles; ++j) {
                 // Prints the files in the listnode
-                printf("%s  ", l->files[j].pathname);
+                if (wrap_in_quotes) {
+                    printf("\"%s\"%s", l->files[j].pathname, seperator);
+                } else {
+                    printf("%s%s", l->files[j].pathname, seperator);
+                }
             }
             printf("\n");
         }
@@ -104,7 +112,7 @@ void do_list_all_files() {
 }
 
 // -q flag output
-void do_quiet_output() {
+void do_quiet_output(void) {
     if (nfiles > total_unique_size) {
         exit(EXIT_SUCCESS);
     } else {
@@ -125,6 +133,8 @@ int main(int argc, char *argv[]) {
     bool single_file_comparison = false;
     bool single_hash_comparison = false;
     bool list_all_files = false;
+    bool wrap_in_quotes = false;
+    bool seperate_with_tabs = false;
     char *filename_to_match = NULL;
     char *hash_to_match = NULL;
 
@@ -156,6 +166,13 @@ int main(int argc, char *argv[]) {
                 standard_output = false;
                 quiet_output = true;
                 break;
+            case 'Q':
+                wrap_in_quotes = true;
+                break;
+            case 'T':
+                seperate_with_tabs = true;
+                break;
+                
         }
     }
 
@@ -183,7 +200,7 @@ int main(int argc, char *argv[]) {
     } else if (single_hash_comparison == true) {
         do_single_hash_comparison(hash_to_match);
     } else if (list_all_files == true) {
-        do_list_all_files();
+        do_list_all_files(wrap_in_quotes, seperate_with_tabs);
     } else if (quiet_output == true) {
         do_quiet_output();
     } else {
