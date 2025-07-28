@@ -1,3 +1,4 @@
 *.o
 /duplicates
 
+.DS_Store
